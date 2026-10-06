@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛡️ Guía Definitiva: Instalación Limpia de SafeLine WAF</title>
+  <!-- Bootstrap 5 CSS + Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      padding-bottom: 3rem;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0b2b4a 0%, #1a4b6d 100%);
+      color: white;
+      padding: 2.8rem 0 2.2rem;
+      border-radius: 0 0 2rem 2rem;
+      box-shadow: 0 8px 20px rgba(0, 20, 40, 0.2);
+      margin-bottom: 2.5rem;
+    }
+    .hero h1 {
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+    }
+    .hero .lead {
+      color: #c7e2ff;
+      font-size: 1.15rem;
+      max-width: 800px;
+    }
+    .badge-soft {
+      background: rgba(255,255,255,0.15);
+      color: #e0f0ff;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      backdrop-filter: blur(4px);
+    }
+    .card-step {
+      border: none;
+      border-radius: 1.25rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      margin-bottom: 2rem;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .card-step:hover {
+      box-shadow: 0 12px 26px rgba(0, 40, 80, 0.08);
+    }
+    .card-header-custom {
+      background: #ffffff;
+      border-bottom: 1px solid #e9eef3;
+      padding: 1.2rem 1.5rem;
+      font-weight: 600;
+      font-size: 1.4rem;
+      color: #0b2b4a;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-header-custom i {
+      font-size: 1.8rem;
+      color: #1a6e9c;
+    }
+    .step-badge {
+      background: #e7f1f9;
+      color: #0b2b4a;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.25rem 1rem;
+      border-radius: 2rem;
+      margin-left: auto;
+      letter-spacing: 0.3px;
+    }
+    .code-block {
+      background: #0d1f2c;
+      color: #e2f0fa;
+      padding: 1rem 1.2rem;
+      border-radius: 0.9rem;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-left: 5px solid #1a6e9c;
+      margin: 1rem 0;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    .code-block code {
+      color: #d4eaff;
+    }
+    .alert-custom {
+      border-radius: 0.9rem;
+      border-left: 6px solid;
+      background: white;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      margin: 1.2rem 0;
+    }
+    .alert-warning-custom {
+      border-left-color: #f0b400;
+      background: #fffbf0;
+    }
+    .alert-danger-custom {
+      border-left-color: #d43f3f;
+      background: #fff6f6;
+    }
+    .alert-info-custom {
+      border-left-color: #1a6e9c;
+      background: #f2f9ff;
+    }
+    .alert-success-custom {
+      border-left-color: #2e9b5e;
+      background: #f2fcf6;
+    }
+    .list-check {
+      list-style: none;
+      padding-left: 0;
+    }
+    .list-check li {
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .list-check li i {
+      color: #1a6e9c;
+      font-size: 1.2rem;
+      margin-top: 0.1rem;
+    }
+    .footer-note {
+      font-size: 0.9rem;
+      color: #5e6f7e;
+      border-top: 1px solid #dde5ed;
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+    }
+    .table-params td {
+      vertical-align: middle;
+    }
+    .table-params code {
+      background: #eef3f8;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.5rem;
+      color: #0b2b4a;
+      font-weight: 500;
+    }
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #133b57;
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+    .troubleshoot-icon {
+      color: #d43f3f;
+    }
+    .small-note {
+      font-size: 0.85rem;
+      color: #6c7a88;
+    }
+    .bg-soft-primary {
+      background: #e8f2fa;
+    }
+    .border-radius-1 {
+      border-radius: 1rem;
+    }
+    .checklist-box {
+      background: #f4f9fe;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid #d9e9f5;
+    }
+    .checklist-box .bi-check-circle-fill {
+      color: #2e9b5e;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Hero / Encabezado -->
+<div class="hero">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+      <span class="badge-soft"><i class="bi bi-shield-lock me-1"></i> WAF · Chaitin SafeLine</span>
+      <span class="badge-soft"><i class="bi bi-translate me-1"></i> Edición Internacional (Inglés)</span>
+      <span class="badge-soft"><i class="bi bi-check2-circle me-1"></i> Guía paso a paso</span>
+    </div>
+    <h1 class="display-6 fw-bold mb-2">🛡️ Guía Definitiva: Instalación Limpia de SafeLine WAF</h1>
+    <p class="lead">Propósito: Proporcionar un método paso a paso, en español, para desplegar SafeLine WAF desde cero, asegurando la interfaz en inglés y evitando los errores de contraseña encontrados previamente. Diseñada para funcionar a la primera.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Requisitos previos -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-list-check"></i> 📋 Requisitos Previos
+      <span class="step-badge">Antes de empezar</span>
+    </div>
+    <div class="card-body p-4">
+      <p class="mb-3">Asegúrate de que tu servidor (VPS) cumpla con los siguientes requisitos mínimos:</p>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <ul class="list-check">
+            <li><i class="bi bi-ubuntu"></i> <strong>Sistema Operativo:</strong> Linux (preferiblemente Debian o Ubuntu)</li>
+            <li><i class="bi bi-cpu"></i> <strong>Arquitectura:</strong> x86_64 (debe soportar SSSE3)</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="list-check">
+            <li><i class="bi bi-docker"></i> <strong>Docker:</strong> Versión 20.10.14 o superior</li>
+            <li><i class="bi bi-boxes"></i> <strong>Docker Compose:</strong> Versión 2.0.0 o superior</li>
+            <li><i class="bi bi-memory"></i> <strong>Recursos:</strong> 1 CPU, 1 GB RAM, 5 GB disco</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================= -->
+  <!-- NUEVO: PASO 0 — INSTALACIÓN DE DOCKER          -->
+  <!-- ============================================= -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-box"></i> 🐳 Paso 0: Instalación de Docker y Docker Compose
+      <span class="step-badge">Requisito base</span>
+    </div>
+    <div class="card-body p-4">
+      <p>Si tu servidor no tiene Docker ni Docker Compose instalados, sigue estos pasos <strong>antes</strong> de continuar con la instalación de SafeLine. Si ya los tienes instalados, puedes saltar directamente al <strong>Paso 1</strong>.</p>
+
+      <div class="alert alert-info-custom d-flex gap-2">
+        <i class="bi bi-info-circle-fill fs-5"></i>
+        <span><strong>Nota:</strong> El método recomendado es usar el repositorio oficial de Docker en lugar del paquete <code>docker.io</code> de la distribución, ya que este último suele estar desactualizado [citation:16][citation:11].</span>
+      </div>
+
+      <h3>0.1. Actualizar el sistema e instalar dependencias</h3>
+      <p>Actualiza los paquetes existentes e instala las herramientas necesarias para agregar el repositorio de Docker [citation:6][citation:17]:</p>
+      <div class="code-block">
+        <code>sudo apt update && sudo apt upgrade -y<br>sudo apt install -y ca-certificates curl gnupg</code>
+      </div>
+
+      <h3>0.2. Agregar la clave GPG oficial de Docker</h3>
+      <p>Este paso asegura que los paquetes que descargues estén firmados y sean auténticos [citation:3][citation:4]:</p>
+      <div class="code-block">
+        <code>sudo install -m 0755 -d /etc/apt/keyrings<br>curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg<br>sudo chmod a+r /etc/apt/keyrings/docker.gpg</code>
+      </div>
+      <p class="small-note"><i class="bi bi-lightbulb me-1"></i> Si usas Ubuntu, cambia <code>debian</code> por <code>ubuntu</code> en la URL de la clave GPG [citation:4][citation:8].</p>
+
+      <h3>0.3. Agregar el repositorio de Docker</h3>
+      <div class="code-block">
+        <code>echo \<br>  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \<br>  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null</code>
+      </div>
+      <p class="small-note"><i class="bi bi-lightbulb me-1"></i> Para Ubuntu, reemplaza <code>debian</code> por <code>ubuntu</code> en la URL [citation:6].</p>
+
+      <h3>0.4. Instalar Docker Engine y Docker Compose</h3>
+      <p>Ahora instala todos los componentes necesarios, incluyendo el plugin de Compose [citation:3][citation:6]:</p>
+      <div class="code-block">
+        <code>sudo apt update<br>sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code>
+      </div>
+
+      <h3>0.5. Habilitar e iniciar el servicio de Docker</h3>
+      <div class="code-block">
+        <code>sudo systemctl enable docker<br>sudo systemctl start docker</code>
+      </div>
+
+      <h3>0.6. (Opcional pero recomendado) Configurar permisos de usuario</h3>
+      <p>Por defecto, necesitas <code>sudo</code> para ejecutar comandos de Docker. Para evitar esto (y prevenir problemas de permisos con SafeLine), agrega tu usuario al grupo <code>docker</code> [citation:1][citation:6][citation:17]:</p>
+      <div class="code-block">
+        <code>sudo usermod -aG docker $USER<br>newgrp docker</code>
+      </div>
+      <div class="alert alert-warning-custom d-flex gap-2">
+        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+        <span><strong>Advertencia de seguridad:</strong> Pertenecer al grupo <code>docker</code> equivale a tener privilegios de root, ya que permite montar el sistema de archivos del host. Úsalo con responsabilidad [citation:11][citation:16].</span>
+      </div>
+
+      <h3>0.7. Verificar la instalación</h3>
+      <p>Confirma que Docker y Docker Compose se instalaron correctamente [citation:1][citation:6]:</p>
+      <div class="code-block">
+        <code>docker --version<br>docker compose version<br>sudo docker run hello-world</code>
+      </div>
+      <p>Si el comando <code>hello-world</code> imprime un mensaje de confirmación, la instalación fue exitosa.</p>
+
+      <div class="alert alert-success-custom d-flex gap-2 mt-3">
+        <i class="bi bi-check-circle-fill fs-5"></i>
+        <span><strong>¡Listo!</strong> Docker y Docker Compose están instalados. Ahora puedes continuar con el <strong>Paso 1</strong> para instalar SafeLine WAF.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paso 1: Limpieza -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-trash3"></i> 🧹 Paso 1: Limpieza Total del Entorno Anterior
+      <span class="step-badge">Limpieza</span>
+    </div>
+    <div class="card-body p-4">
+      <p>Para asegurar una instalación exitosa, eliminaremos cualquier rastro de intentos previos.</p>
+      
+      <h3>1. Detener y eliminar contenedores, redes y volúmenes de SafeLine</h3>
+      <div class="code-block">
+        <code>cd /data/safeline<br>sudo docker compose down --volumes --remove-orphans</code>
+      </div>
+      <div class="alert alert-info-custom d-flex gap-2">
+        <i class="bi bi-info-circle-fill fs-5"></i>
+        <span><strong>Nota:</strong> Si el comando <code>docker compose</code> no se encuentra, prueba con <code>docker-compose</code>.</span>
+      </div>
+
+      <h3>2. Eliminar el directorio de instalación</h3>
+      <div class="code-block">
+        <code>cd /<br>sudo rm -rf /data/safeline</code>
+      </div>
+
+      <h3>3. Verificar que no queden volúmenes huérfanos de SafeLine</h3>
+      <div class="code-block">
+        <code>sudo docker volume ls | grep safeline</code>
+      </div>
+      <p class="small-note">Si el comando anterior muestra algún volumen, elimínalo con <code>sudo docker volume rm &lt;nombre_del_volumen&gt;</code>.</p>
+    </div>
+  </div>
+
+  <!-- Paso 2: Instalación manual -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-box-seam"></i> 📦 Paso 2: Instalación Manual Paso a Paso
+      <span class="step-badge">Instalación</span>
+    </div>
+    <div class="card-body p-4">
+      <p>Este método nos da control total y evita consumir recursos innecesarios.</p>
+
+      <h3>2.1. Crear el Directorio de Instalación</h3>
+      <div class="code-block">
+        <code>sudo mkdir -p /data/safeline<br>cd /data/safeline</code>
+      </div>
+
+      <h3>2.2. Descargar el Script de Docker Compose</h3>
+      <div class="code-block">
+        <code>sudo wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml"</code>
+      </div>
+
+      <h3>2.3. Crear el Archivo de Variables de Entorno (.env)</h3>
+      <p>Este es el paso crítico para solucionar el error de autenticación de PostgreSQL y garantizar el idioma inglés.</p>
+      <div class="code-block">
+        <code>sudo nano .env</code>
+      </div>
+      <p class="mt-3">Copia y pega exactamente el siguiente contenido dentro del editor:</p>
+      <div class="code-block">
+        <code>SAFELINE_DIR=/data/safeline<br>
+        IMAGE_TAG=latest<br>
+        MGT_PORT=9443<br>
+        POSTGRES_PASSWORD=MiClaveSegura2026<br>
+        SUBNET_PREFIX=172.22.222<br>
+        IMAGE_PREFIX=chaitin<br>
+        ARCH_SUFFIX=<br>
+        RELEASE=<br>
+        REGION=-g</code>
+      </div>
+
+      <div class="alert alert-warning-custom mt-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Explicación de las variables clave:</strong>
+        <ul class="mt-2 mb-0">
+          <li><code>POSTGRES_PASSWORD</code>: Debe ser una contraseña solo con letras y números. No uses caracteres especiales como <code>{, }, @, #, $</code>, etc., ya que romperían la URL de conexión y causarían el error <em>password authentication failed</em> o <em>invalid userinfo</em>.</li>
+          <li><code>REGION=-g</code>: Esta variable es la que fuerza la instalación de la Edición Internacional (Inglés). Si se deja vacía, se instala la versión China.</li>
+          <li><code>IMAGE_PREFIX=chaitin</code>: Se usa para descargar las imágenes desde Docker Hub, que suele ser más rápido para servidores fuera de China.</li>
+        </ul>
+      </div>
+      <p class="mt-2">Guarda el archivo con <kbd>Ctrl + O</kbd>, luego <kbd>Enter</kbd>, y sal con <kbd>Ctrl + X</kbd>.</p>
+
+      <h3>2.4. Levantar SafeLine</h3>
+      <div class="code-block">
+        <code>sudo docker compose up -d</code>
+      </div>
+      <p>Este proceso descargará las imágenes y arrancará los 7 contenedores. Puede tardar varios minutos.</p>
+
+      <h3>2.5. Verificar el Estado de los Contenedores</h3>
+      <div class="code-block">
+        <code>sudo docker ps</code>
+      </div>
+      <p>Espera hasta que todos los contenedores (<code>safeline-mgt</code>, <code>safeline-luigi</code>, <code>safeline-pg</code>, etc.) muestren un estado <span class="badge bg-success">Up</span> estable (ej. <em>Up 2 minutes (healthy)</em>) y no <span class="badge bg-danger">Restarting</span>.</p>
+    </div>
+  </div>
+
+  <!-- Paso 3: Credenciales -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-key"></i> 🔑 Paso 3: Obtener las Credenciales de Acceso
+      <span class="step-badge">Credenciales</span>
+    </div>
+    <div class="card-body p-4">
+      <p>Una vez que los contenedores estén estables, genera el usuario y la contraseña para el panel de administración.</p>
+      <div class="code-block">
+        <code>sudo docker exec safeline-mgt resetadmin</code>
+      </div>
+      <div class="alert alert-success-custom d-flex gap-2">
+        <i class="bi bi-check-circle-fill fs-5"></i>
+        <span>La terminal te mostrará un nombre de usuario (<strong>admin</strong>) y una contraseña generada aleatoriamente. <strong>Anótala inmediatamente</strong>, ya que no se volverá a mostrar.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paso 4: Acceder a la interfaz -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-globe2"></i> 🌐 Paso 4: Acceder a la Interfaz Web
+      <span class="step-badge">Acceso</span>
+    </div>
+    <div class="card-body p-4">
+      <p>Abre tu navegador y ve a la siguiente URL:</p>
+      <div class="code-block">
+        <code>https://TU_IP_PUBLICA:9443</code>
+      </div>
+      <p class="small-note">(Reemplaza <code>TU_IP_PUBLICA</code> con la IP de tu VPS, ej. <code>https://162.243.163.116:9443</code>).</p>
+      <ol class="mt-3">
+        <li>Acepta la advertencia de seguridad del navegador (certificado autofirmado) haciendo clic en <strong>"Avanzado"</strong> y luego en <strong>"Continuar a ... (no seguro)"</strong>.</li>
+        <li>Introduce el usuario (<strong>admin</strong>) y la contraseña que obtuviste en el Paso 3.</li>
+      </ol>
+      <div class="alert alert-info-custom mt-2">
+        <i class="bi bi-translate me-2"></i> La interfaz ahora debería mostrarse completamente en inglés.
+      </div>
+    </div>
+  </div>
+
+  <!-- Troubleshooting -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-tools"></i> 🛠️ Solución de Problemas (Troubleshooting)
+      <span class="step-badge">Errores comunes</span>
+    </div>
+    <div class="card-body p-4">
+
+      <!-- Error 1 -->
+      <div class="alert alert-danger-custom mb-4">
+        <h5 class="fw-bold"><i class="bi bi-x-octagon-fill troubleshoot-icon me-2"></i>❌ Error: password authentication failed o failed SASL auth (SQLSTATE 28P01)</h5>
+        <p><strong>Causa:</strong> El volumen de datos de PostgreSQL conserva una contraseña antigua que no coincide con la nueva en el archivo <code>.env</code>.</p>
+        <p><strong>Solución:</strong> Ejecuta los siguientes comandos para eliminar el volumen de PostgreSQL y forzar su reinicialización:</p>
+        <div class="code-block">
+          <code>cd /data/safeline<br>sudo docker compose down -v<br>sudo docker compose up -d</code>
+        </div>
+        <p class="mb-0"><i class="bi bi-exclamation-diamond me-1"></i> El flag <code>-v</code> es esencial aquí.</p>
+      </div>
+
+      <!-- Error 2 -->
+      <div class="alert alert-danger-custom mb-4">
+        <h5 class="fw-bold"><i class="bi bi-x-octagon-fill troubleshoot-icon me-2"></i>❌ Error: cannot parse ... invalid userinfo o net/url: invalid userinfo</h5>
+        <p><strong>Causa:</strong> La contraseña de <code>POSTGRES_PASSWORD</code> en el archivo <code>.env</code> contiene caracteres especiales que rompen el formato de la URL de conexión.</p>
+        <p><strong>Solución:</strong> Edita el archivo <code>.env</code> y cambia <code>POSTGRES_PASSWORD</code> por una contraseña que contenga solo letras y números. Luego, aplica la solución del error anterior (<code>docker compose down -v</code> y <code>docker compose up -d</code>).</p>
+      </div>
+
+      <!-- Error 3 -->
+      <div class="alert alert-danger-custom mb-4">
+        <h5 class="fw-bold"><i class="bi bi-x-octagon-fill troubleshoot-icon me-2"></i>❌ Error: dial error (dial tcp ... connect: no route to host)</h5>
+        <p><strong>Causa:</strong> El firewall del sistema operativo está bloqueando la comunicación entre los contenedores de Docker en la red interna de SafeLine.</p>
+        <p><strong>Solución:</strong> Permite el tráfico en la interfaz de red de Docker.</p>
+        <div class="code-block">
+          <code># Identifica el nombre de la interfaz (usualmente safeline-ce)<br>ip link show | grep safeline-ce<br><br># Añade la interfaz a la zona de confianza del firewall (ejemplo con firewalld)<br>sudo firewall-cmd --permanent --zone=trusted --add-interface=safeline-ce<br>sudo firewall-cmd --reload</code>
+        </div>
+        <p class="mb-0">Si usas <code>ufw</code> o <code>nftables</code>, deberás añadir una regla similar para permitir todo el tráfico en la interfaz <code>safeline-ce</code>.</p>
+      </div>
+
+      <!-- Error 4 -->
+      <div class="alert alert-danger-custom mb-4">
+        <h5 class="fw-bold"><i class="bi bi-x-octagon-fill troubleshoot-icon me-2"></i>❌ La interfaz sigue en Chino</h5>
+        <p><strong>Causa:</strong> No se configuró correctamente la variable <code>REGION</code> en el archivo <code>.env</code>.</p>
+        <p><strong>Solución:</strong> Asegúrate de que la línea <code>REGION=-g</code> esté presente y sin errores tipográficos en tu archivo <code>.env</code>. Si ya instalaste, puedes editar el archivo y reiniciar con <code>docker compose up -d</code>.</p>
+      </div>
+
+      <!-- Error 5 -->
+      <div class="alert alert-danger-custom mb-0">
+        <h5 class="fw-bold"><i class="bi bi-x-octagon-fill troubleshoot-icon me-2"></i>❌ No puedo acceder a la WebUI (ERR_CONNECTION_REFUSED)</h5>
+        <p><strong>Causa:</strong> El puerto 9443 no está abierto en el firewall de tu proveedor de nube (ej. DigitalOcean) o el contenedor <code>safeline-mgt</code> está inestable.</p>
+        <p><strong>Solución:</strong></p>
+        <ol>
+          <li><strong>Verifica el contenedor:</strong> Ejecuta <code>sudo docker ps</code> y asegúrate de que <code>safeline-mgt</code> esté <span class="badge bg-success">Up</span> y no <span class="badge bg-danger">Restarting</span>.</li>
+          <li><strong>Abre el puerto en el firewall del proveedor:</strong> Crea una regla de entrada (Inbound Rule) para el protocolo TCP en el puerto 9443.</li>
+          <li><strong>Verifica el puerto localmente:</strong> En el servidor, ejecuta <code>curl -k -v https://127.0.0.1:9443</code>. Si obtienes una respuesta, el problema es el firewall externo.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checklist final -->
+  <div class="card-step">
+    <div class="card-header-custom">
+      <i class="bi bi-check2-square"></i> ✅ Checklist de Verificación Final
+      <span class="step-badge">Comprobación</span>
+    </div>
+    <div class="card-body p-4">
+      <div class="checklist-box">
+        <ul class="list-check mb-0">
+          <li><i class="bi bi-check-circle-fill"></i> Docker y Docker Compose están instalados y funcionando.</li>
+          <li><i class="bi bi-check-circle-fill"></i> El directorio <code>/data/safeline</code> fue eliminado y recreado.</li>
+          <li><i class="bi bi-check-circle-fill"></i> El archivo <code>.env</code> contiene <code>POSTGRES_PASSWORD</code> con solo letras y números.</li>
+          <li><i class="bi bi-check-circle-fill"></i> El archivo <code>.env</code> contiene <code>REGION=-g</code> para la versión en inglés.</li>
+          <li><i class="bi bi-check-circle-fill"></i> El comando <code>sudo docker ps</code> muestra todos los contenedores en estado <span class="badge bg-success">Up</span>.</li>
+          <li><i class="bi bi-check-circle-fill"></i> El puerto 9443 está abierto en el firewall de tu proveedor de nube.</li>
+          <li><i class="bi bi-check-circle-fill"></i> Obtuviste y anotaste las credenciales con <code>sudo docker exec safeline-mgt resetadmin</code>.</li>
+          <li><i class="bi bi-check-circle-fill"></i> Accedes a la WebUI en <code>https://&lt;IP&gt;:9443</code> y ves la interfaz en inglés.</li>
+        </ul>
+      </div>
+      <p class="mt-4 mb-0 fst-italic text-secondary">Siguiendo esta guía, la instalación de SafeLine WAF debe completarse sin contratiempos y con la interfaz en el idioma deseado.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-note text-center">
+    <i class="bi bi-shield-check me-1"></i> Guía Definitiva · SafeLine WAF Edición Internacional · Documento generado para Bootstrap 5
+  </div>
+
+</div>
+
+<!-- Bootstrap JS (opcional para algunos componentes) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
